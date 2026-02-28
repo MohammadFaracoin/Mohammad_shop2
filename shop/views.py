@@ -8,6 +8,7 @@ from .cart import Cart
 from accounts.models import Profile, Province, City
 from .forms import OrderForm
 
+
 def index(request):
     products = Product.objects.all()
     return render(request, "index.html", {'products': products})
