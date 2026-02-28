@@ -58,7 +58,7 @@ def save_order_user(cart, request):
         mobile=request.user.mobile,
         postal_code=request.user.profile.postal_code,
         address=request.user.profile.address,
-        city_id = request.user.profile.city_id
+        city_id=request.user.profile.city_id
 
     )
     for item in cart:
