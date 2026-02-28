@@ -7,7 +7,7 @@
             padding: 5px;
             text-align: center;
         }
-        table a{
+        table a, a.shopping{
             text-decoration-line: underline;
         }
         .add-to-cart .qty-label .input-number{
@@ -27,28 +27,35 @@
 
     </style>
 {% endblock %}
+
 {% block content %}
+    <div class="container">
+    {% if cart.cart_length == 0 %}
+        <p>your cart is empty!</p>
+        <a href="{% url 'shop:store' %}" class="shopping">continue shopping</a>
+    {% else %}
     <table>
         <tr>
             <th>image</th>
             <th>product</th>
             <th>price</th>
             <th>quantity</th>
+            <th>total price</th>
             <th>remove</th>
         </tr>
-        {% for keys, values in cart.items %}
+        {% for item in cart %}
         <tr>
-            <td><img src="{{ values.product.image.url }}" alt="{{ values.product.title }}" width="140px"></td>
-            <td><a href="{{ values.product.get_absolute_url }}">{{ values.product.title }}</a></td>
-            <td>{{ values.price }}</td>
+            <td><img src="{{ item.product.image.url }}" alt="{{ item.product.title }}" width="140px"></td>
+            <td><a href="{{ item.product.get_absolute_url }}">{{ item.product.title }}</a></td>
+            <td>{{ item.price }}</td>
             <td>
                 							<div class="add-to-cart">
                                 <form method="post" action="{% url 'shop:add_to_cart' %}">
 								<div class="qty-label">
 									Qty
 									<div class="input-number">
-										<input type="number" name="quantity" value="{{ values.quantity }}">
-                                        <input type="hidden" name="product_id" value="{{ values.product.id }}">
+										<input type="number" name="quantity" value="{{ item.quantity }}">
+                                        <input type="hidden" name="product_id" value="{{ item.product.id }}">
                                         <input type="hidden" name="update" value="1">
 										<span class="qty-up">+</span>
 										<span class="qty-down">-</span>
@@ -59,8 +66,18 @@
                                 </form>
 							</div>
             </td>
-            <td><a href="{% url 'shop:remove_from_cart' values.product.id %}">Remove</a></td>
+            <td>{{ item.total_price}}</td>
+            <td><a href="{% url 'shop:remove_from_cart' item.product.id %}">Remove</a></td>
         </tr>
         {% endfor %}
+        <tr>
+            <td colspan="4"></td>
+             <td>Total Price</td>
+            <td>{{ cart.get_total_price }}</td>
+        </tr>
     </table>
+    <a href="{% url 'shop:checkout' %}" class="primary-btn order-submit">checkout</a>
+    <a href="{% url 'shop:store' %}" class="shopping">continue shopping</a>
+    {% endif %}
+    </div>
 {% endblock content %}

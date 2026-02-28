@@ -9,6 +9,21 @@ class SoftUserManager(UserManager):
         return super().get_queryset().filter(deleted=False)
 
 
+class Province(models.Model):
+    title = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.title
+
+
+class City(models.Model):
+    province = models.ForeignKey(Province, models.CASCADE)
+    title = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.title
+
+
 class User(AbstractUser):
     mobile = models.CharField(_("mobile"), max_length=11, unique=True)
     email = models.EmailField(_("email address"), unique=True)
@@ -22,6 +37,12 @@ class User(AbstractUser):
         self.deleted = True
         self.save()
 
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
+    postal_code = models.CharField(max_length=10)
+    address = models.CharField(max_length=500)
 
 
 
