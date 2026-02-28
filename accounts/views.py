@@ -1,6 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from .models import City
 
+
 def edit_profile(request):
     return HttpResponse('<h1> edit profile</h1>')
 
